@@ -7,7 +7,7 @@
 
 <style>
 body{
-font-family: Arial, sans-serif;
+font-family: Arial;
 background:#f2f2f2;
 padding:20px;
 }
@@ -18,7 +18,7 @@ margin:auto;
 background:white;
 padding:20px;
 border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,.1);
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 h1{
@@ -29,18 +29,17 @@ color:#0066cc;
 input,select{
 width:100%;
 padding:10px;
-margin-top:5px;
-margin-bottom:15px;
+margin-bottom:12px;
 }
 
 button{
+width:100%;
+padding:12px;
 background:#0066cc;
 color:white;
-padding:12px;
 border:none;
-width:100%;
-font-size:16px;
 cursor:pointer;
+font-size:16px;
 }
 
 .ticket{
@@ -48,7 +47,6 @@ display:none;
 margin-top:20px;
 border:2px solid #000;
 padding:20px;
-background:white;
 }
 
 .ticket h2{
@@ -56,13 +54,49 @@ text-align:center;
 margin-bottom:20px;
 }
 
-.row{
+.row-flex{
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+gap:10px;
 margin-bottom:10px;
+}
+
+.prescription{
+margin-top:20px;
+}
+
+.prescription-box{
+height:220px;
+border:1px solid #000;
+margin-top:10px;
+padding:10px;
 }
 
 .print-btn{
 margin-top:15px;
 background:green;
+}
+
+@media print {
+body *{
+visibility:hidden;
+}
+
+.ticket, .ticket *{
+visibility:visible;
+}
+
+.ticket{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+}
+
+button{
+display:none;
+}
 }
 </style>
 </head>
@@ -73,7 +107,7 @@ background:green;
 
 <h1>Hospital OPD Token System</h1>
 
-<label>Patient Name</label>
+<label>Name</label>
 <input type="text" id="name">
 
 <label>Date of Birth</label>
@@ -86,7 +120,7 @@ background:green;
 <option>Other</option>
 </select>
 
-<label>Mobile Number</label>
+<label>Phone</label>
 <input type="text" id="phone">
 
 <label>Department</label>
@@ -101,39 +135,31 @@ background:green;
 <label>Visit Date</label>
 <input type="date" id="visitdate">
 
-<button onclick="generateToken()">
-Generate Token
-</button>
+<button onclick="generateToken()">Generate Token</button>
 
 <div class="ticket" id="ticket">
 
-<h2>
-SHAHEED SUHRAWARDY MEDICAL COLLEGE HOSPITAL
-</h2>
+<h2>SHAHEED CHANDRARAUDRI MEDICAL COLLEGE HOSPITAL</h2>
 
-<div class="row"><b>Token No:</b> <span id="t_token"></span></div>
+<div class="row-flex">
+<div><b>Token:</b> <span id="t_token"></span></div>
+<div><b>Name:</b> <span id="t_name"></span></div>
+<div><b>DOB:</b> <span id="t_dob"></span></div>
+<div><b>Gender:</b> <span id="t_gender"></span></div>
+</div>
 
-<div class="row"><b>Patient Name:</b> <span id="t_name"></span></div>
+<div class="row-flex">
+<div><b>Phone:</b> <span id="t_phone"></span></div>
+<div><b>Department:</b> <span id="t_department"></span></div>
+<div><b>Visit:</b> <span id="t_visitdate"></span></div>
+</div>
 
-<div class="row"><b>Date of Birth:</b> <span id="t_dob"></span></div>
+<div class="prescription">
+<b>Doctor Notes / Prescription</b>
+<div class="prescription-box"></div>
+</div>
 
-<div class="row"><b>Gender:</b> <span id="t_gender"></span></div>
-
-<div class="row"><b>Phone:</b> <span id="t_phone"></span></div>
-
-<div class="row"><b>Department:</b> <span id="t_department"></span></div>
-
-<div class="row"><b>Visit Date:</b> <span id="t_visitdate"></span></div>
-
-<hr>
-
-<h3>Doctor Notes / Prescription</h3>
-
-<br><br><br><br><br>
-
-<button class="print-btn" onclick="window.print()">
-Print Ticket
-</button>
+<button class="print-btn" onclick="window.print()">Print Ticket</button>
 
 </div>
 
@@ -146,34 +172,19 @@ let tokenCounter = localStorage.getItem("tokenCounter") || 0;
 function generateToken(){
 
 tokenCounter++;
+localStorage.setItem("tokenCounter", tokenCounter);
 
-localStorage.setItem("tokenCounter",tokenCounter);
-
-let token =
-"OPD-" +
-String(tokenCounter).padStart(3,'0');
+let token = "OPD-" + String(tokenCounter).padStart(3,'0');
 
 document.getElementById("t_token").innerText = token;
+document.getElementById("t_name").innerText = document.getElementById("name").value;
+document.getElementById("t_dob").innerText = document.getElementById("dob").value;
+document.getElementById("t_gender").innerText = document.getElementById("gender").value;
+document.getElementById("t_phone").innerText = document.getElementById("phone").value;
+document.getElementById("t_department").innerText = document.getElementById("department").value;
+document.getElementById("t_visitdate").innerText = document.getElementById("visitdate").value;
 
-document.getElementById("t_name").innerText =
-document.getElementById("name").value;
-
-document.getElementById("t_dob").innerText =
-document.getElementById("dob").value;
-
-document.getElementById("t_gender").innerText =
-document.getElementById("gender").value;
-
-document.getElementById("t_phone").innerText =
-document.getElementById("phone").value;
-
-document.getElementById("t_department").innerText =
-document.getElementById("department").value;
-
-document.getElementById("t_visitdate").innerText =
-document.getElementById("visitdate").value;
-
-document.getElementById("ticket").style.display="block";
+document.getElementById("ticket").style.display = "block";
 }
 
 </script>
